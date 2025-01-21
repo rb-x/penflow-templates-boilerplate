@@ -1,0 +1,21 @@
+{
+    "nodes": [
+        {
+            "id": "start",
+            "type": "start",
+            "position": { "x": 100, "y": 100 }
+        },
+        {
+            "id": "end",
+            "type": "end",
+            "position": { "x": 300, "y": 300 }
+        }
+    ],
+    "edges": [
+        {
+            "id": "edge-1",
+            "source": "start",
+            "target": "end"
+        }
+    ]
+}

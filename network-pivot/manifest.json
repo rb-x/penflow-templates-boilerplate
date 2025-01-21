@@ -1,0 +1,8 @@
+{
+    "type": "template",
+    "version": "1.1.0",
+    "name": "Network Pivoting Template",
+    "description": "Network pivoting and lateral movement workflow",
+    "author": "PenFlow",
+    "tags": ["network", "pivot", "lateral-movement"]
+}

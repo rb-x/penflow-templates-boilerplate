@@ -1,0 +1,8 @@
+{
+    "type": "template",
+    "version": "0.9.0",
+    "name": "Android Assessment Template",
+    "description": "Android application security assessment workflow",
+    "author": "PenFlow",
+    "tags": ["mobile", "android", "assessment"]
+}

@@ -1,0 +1,8 @@
+{
+    "type": "template",
+    "version": "1.0.0",
+    "name": "Web XSS Template",
+    "description": "Comprehensive XSS testing workflow template",
+    "author": "PenFlow",
+    "tags": ["web", "xss", "injection"]
+}
