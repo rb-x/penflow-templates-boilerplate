@@ -1,21 +1,77 @@
 {
-    "nodes": [
-        {
-            "id": "start",
-            "type": "start",
-            "position": { "x": 100, "y": 100 }
-        },
-        {
-            "id": "end",
-            "type": "end",
-            "position": { "x": 300, "y": 300 }
+  "nodes": [
+    {
+      "id": "02383b5a-ca35-451d-968d-867c22af3fd9",
+      "type": "custom",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "data": {
+        "name": "New Node",
+        "expanded": true,
+        "description": "",
+        "findings": [],
+        "commands": [],
+        "status": "NOT_STARTED",
+        "tags": [],
+        "properties": {
+          "showPosition": false,
+          "showId": false
         }
-    ],
-    "edges": [
-        {
-            "id": "edge-1",
-            "source": "start",
-            "target": "end"
+      },
+      "measured": {
+        "width": 172,
+        "height": 64
+      },
+      "style": {
+        "opacity": 1
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "selected": true
+    },
+    {
+      "id": "06beb974-2311-4d22-8112-80f852e2bf78",
+      "position": {
+        "x": 0,
+        "y": 114
+      },
+      "type": "custom",
+      "data": {
+        "name": "New Node",
+        "expanded": false,
+        "description": "",
+        "findings": [],
+        "commands": [],
+        "status": "NOT_STARTED",
+        "tags": [],
+        "properties": {
+          "showPosition": false,
+          "showId": false
         }
-    ]
+      },
+      "measured": {
+        "width": 172,
+        "height": 64
+      },
+      "style": {
+        "opacity": 1
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "selected": false
+    }
+  ],
+  "edges": [
+    {
+      "id": "02383b5a-ca35-451d-968d-867c22af3fd9->06beb974-2311-4d22-8112-80f852e2bf78",
+      "source": "02383b5a-ca35-451d-968d-867c22af3fd9",
+      "target": "06beb974-2311-4d22-8112-80f852e2bf78",
+      "type": "default",
+      "style": {
+        "opacity": 1
+      }
+    }
+  ]
 }
