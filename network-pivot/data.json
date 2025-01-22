@@ -1,77 +1,772 @@
 {
   "nodes": [
     {
-      "id": "02383b5a-ca35-451d-968d-867c22af3fd9",
-      "type": "custom",
+      "id": "root",
       "position": {
         "x": 0,
+        "y": 518
+      },
+      "data": {
+        "expanded": true,
+        "name": "Unauthenticated Enumeration",
+        "description": "# Initial Unauthenticated Reconnaissance Phase\n\n## Overview\nStarting point for all enumeration activities without requiring authentication.\n\n### Key Activities:\n- Network scanning\n- Service identification \n- Basic host discovery\n\n### Methodology\nStart with a basic host discovery scan to identify live hosts:\n```bash\nnmap -sn 192.168.1.0/24  # Simple ping sweep\n```\n\nThen progress to more detailed scans:\n```bash\nnmap -sS -T4 192.168.1.0/24  # SYN scan\n```\n\n> **Note:** Begin with less intrusive scans and gradually increase intensity\n\n### Common Pitfalls\n- Aggressive scanning triggering IDS/IPS\n- Network segregation affecting results\n- Rate limiting affecting accuracy",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_init",
+            "title": "Initial Host Discovery",
+            "description": "Basic host discovery",
+            "command": "nmap -sn {{TARGET_RANGE}}"
+          }
+        ],
+        "status": "IN_PROGRESS",
+        "tags": [
+          "recon"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": true
+      },
+      "measured": {
+        "width": 301,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "passive",
+      "position": {
+        "x": 351,
+        "y": 444
+      },
+      "data": {
+        "expanded": false,
+        "name": "Passive Reconnaissance",
+        "description": "# Passive Information Gathering\n\n## Purpose\nCollect information without direct interaction with target systems to avoid detection.\n\n### Network Capture Setup\n```bash\n# Monitor mode on wireless interface\nairmon-ng start wlan0\n\n# Basic traffic capture\ntcpdump -i eth0 -w capture.pcap\n```\n\n### Analysis Techniques\n1. Protocol Analysis\n```bash\ntshark -r capture.pcap -Y 'http'\nwireshark capture.pcap\n```\n\n2. Traffic Patterns\n```bash\nCapinfos capture.pcap\n```\n\n> **Security Note:** Ensure proper authorization and compliance with regulations\n\n### Key Focus Areas:\n- Network protocols in use\n- Communication patterns\n- Service identification\n- Data leakage detection",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_wireshark",
+            "title": "Network Sniffing",
+            "description": "Capture network traffic",
+            "command": "wireshark -i {{INTERFACE}} -k"
+          },
+          {
+            "id": "cmd_tcpdump",
+            "title": "TCP Dump",
+            "description": "CLI traffic capture",
+            "command": "tcpdump -i {{INTERFACE}} -w capture.pcap"
+          },
+          {
+            "id": "cmd_pktmon",
+            "title": "Windows Packet Monitor",
+            "description": "Native Windows packet capture",
+            "command": "pktmon start --capture -f capture.etl"
+          }
+        ],
+        "status": "IN_PROGRESS",
+        "tags": [
+          "passive",
+          "network"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": false
+      },
+      "measured": {
+        "width": 267,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "network_discovery",
+      "position": {
+        "x": 369.5,
+        "y": 592
+      },
+      "data": {
+        "expanded": false,
+        "name": "Network Discovery",
+        "description": "# Active Network Scanning\n\n## Comprehensive Port Scanning Strategy\n\n### Initial Quick Scan\n```bash\n# Quick TCP scan of common ports\nnmap -sS -T4 -F {{TARGET_IP}}\n```\n\n### Full TCP Scan\n```bash\n# Full TCP port scan with service detection\nnmap -sS -p- -sV {{TARGET_IP}}\n```\n\n### UDP Scanning\n```bash\n# Scan common UDP ports\nnmap -sU -F {{TARGET_IP}}\n```\n\n### Version Detection\n```bash\n# Aggressive version detection\nnmap -sV --version-intensity 5 {{TARGET_IP}}\n```\n\n> **Warning:** Aggressive scanning may trigger security controls\n\n### Best Practices:\n1. Start with basic scans\n2. Document all findings\n3. Follow up on interesting ports\n4. Verify results with multiple tools",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_portscan",
+            "title": "Full Port Scan",
+            "description": "Comprehensive port scan",
+            "command": "nmap -p- -sV {{TARGET_IP}}"
+          }
+        ],
+        "status": "NOT_STARTED",
+        "tags": [
+          "active",
+          "network"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": true
+      },
+      "measured": {
+        "width": 230,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "web_enum",
+      "position": {
+        "x": 671.5,
+        "y": 296
+      },
+      "data": {
+        "expanded": false,
+        "name": "Web Enumeration",
+        "description": "# Web Application Analysis\n\n## Initial Reconnaissance\n```bash\n# Basic web server info\ncurl -I http://{{TARGET_IP}}\n\n# Whatweb scan\nwhatweb -a 3 http://{{TARGET_IP}}\n```\n\n## Technology Stack Detection\n```bash\n# Wappalyzer CLI\nwappalyzer http://{{TARGET_IP}}\n\n# Nikto scan\nnikto -h {{TARGET_IP}}\n```\n\n### Common Web Technologies to Identify:\n- Web Server (Apache, Nginx, IIS)\n- Programming Language (PHP, Java, Python)\n- Frameworks (Laravel, Django, Spring)\n- CMS Systems (WordPress, Drupal)\n\n> **Tip:** Document all identified technologies for targeted testing later\n\n### Methodology:\n1. Passive header analysis\n2. Technology fingerprinting\n3. Directory structure mapping\n4. Security control identification",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_webmap",
+            "title": "Web Mapping",
+            "description": "Map web structure",
+            "command": "whatweb {{TARGET_IP}}"
+          }
+        ],
+        "status": "NOT_STARTED",
+        "tags": [
+          "web"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": true
+      },
+      "measured": {
+        "width": 220,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "web_content",
+      "position": {
+        "x": 959,
+        "y": 148
+      },
+      "data": {
+        "expanded": false,
+        "name": "Content Discovery",
+        "description": "# Web Content Discovery\n\n## Directory Enumeration\n```bash\n# Recursive directory scanning\ngobuster dir -u http://{{TARGET_IP}} -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt\n\n# Common file extensions\ndirsearch -u http://{{TARGET_IP}} -e php,asp,aspx,jsp,html,zip,bak\n```\n\n### Methodology:\n1. Start with common directories\n2. Follow up on interesting findings\n3. Check for backup files\n4. Look for exposed git repositories\n\n> **Note:** Customize wordlists based on the target technology stack",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_dirb",
+            "title": "Directory Bruteforce",
+            "description": "Find hidden directories",
+            "command": "dirb http://{{TARGET_IP}}"
+          }
+        ],
+        "status": "NOT_STARTED",
+        "tags": [
+          "web",
+          "content"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": true
+      },
+      "measured": {
+        "width": 226,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "fuzzing_path",
+      "position": {
+        "x": 1275,
         "y": 0
       },
       "data": {
-        "name": "New Node",
-        "expanded": true,
-        "description": "",
+        "expanded": false,
+        "name": "Path Fuzzing",
+        "description": "# Path Fuzzing Techniques\n\n## Basic Path Discovery\n```bash\n# Basic path fuzzing\nffuf -w /path/to/wordlist -u http://{{TARGET_IP}}/FUZZ\n\n# Extension-specific fuzzing\nffuf -w /path/to/wordlist -u http://{{TARGET_IP}}/FUZZ.php\n```\n\n### Advanced Techniques:\n```bash\n# Custom filters\nffuf -w wordlist.txt -u http://{{TARGET_IP}}/FUZZ -fc 404\n\n# Multiple parameters\nffuf -w users.txt:USERS -w pass.txt:PASS -u http://{{TARGET_IP}}/FUZZ/FUZ2Z\n```\n\n> **Important:** Monitor server responses for error patterns",
         "findings": [],
-        "commands": [],
+        "commands": [
+          {
+            "id": "cmd_ffuf",
+            "title": "FFuF Path Fuzzing",
+            "description": "Fuzz web paths",
+            "command": "ffuf -w wordlist.txt -u http://{{TARGET_IP}}/FUZZ"
+          }
+        ],
         "status": "NOT_STARTED",
-        "tags": [],
+        "tags": [
+          "web",
+          "fuzzing"
+        ],
         "properties": {
           "showPosition": false,
           "showId": false
-        }
+        },
+        "expandable": false
       },
       "measured": {
-        "width": 172,
-        "height": 64
+        "width": 190,
+        "height": 98
       },
+      "selected": false,
+      "type": "custom",
       "style": {
-        "opacity": 1
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
       },
-      "sourcePosition": "bottom",
-      "targetPosition": "top",
-      "selected": true
+      "sourcePosition": "right",
+      "targetPosition": "left"
     },
     {
-      "id": "06beb974-2311-4d22-8112-80f852e2bf78",
+      "id": "vhosts",
       "position": {
-        "x": 0,
-        "y": 114
+        "x": 1274.5,
+        "y": 148
       },
-      "type": "custom",
       "data": {
-        "name": "New Node",
         "expanded": false,
-        "description": "",
+        "name": "Virtual Hosts",
+        "description": "# Virtual Host Discovery\n\n## Enumeration Techniques\n```bash\n# Basic vhost discovery\ngobuster vhost -u http://{{TARGET_IP}} -w vhost-wordlist.txt\n\n# DNS enumeration\ndnsrecon -d {{TARGET_DOMAIN}}\n```\n\n### Manual Verification:\n```bash\n# Test vhost using curl\ncurl -H \"Host: VHOST\" http://{{TARGET_IP}}\n```\n\n> **Tip:** Check SSL certificates for additional vhost names",
         "findings": [],
-        "commands": [],
+        "commands": [
+          {
+            "id": "cmd_vhost",
+            "title": "VHost Discovery",
+            "description": "Find virtual hosts",
+            "command": "gobuster vhost -w vhosts.txt -u http://{{TARGET_IP}}"
+          }
+        ],
         "status": "NOT_STARTED",
-        "tags": [],
+        "tags": [
+          "web",
+          "vhosts"
+        ],
         "properties": {
           "showPosition": false,
           "showId": false
-        }
+        },
+        "expandable": false
       },
       "measured": {
-        "width": 172,
-        "height": 64
+        "width": 191,
+        "height": 98
       },
+      "selected": false,
+      "type": "custom",
       "style": {
-        "opacity": 1
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
       },
-      "sourcePosition": "bottom",
-      "targetPosition": "top",
-      "selected": false
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "params",
+      "position": {
+        "x": 1249,
+        "y": 296
+      },
+      "data": {
+        "expanded": false,
+        "name": "Parameter Discovery",
+        "description": "# Parameter Discovery and Analysis\n\n## Automated Discovery\n```bash\n# Basic parameter discovery\narjun -u http://{{TARGET_IP}}\n\n# Advanced scanning\nparamspider --domain {{TARGET_DOMAIN}}\n```\n\n### Manual Testing:\n```bash\n# Test parameter reflection\ncurl -X POST -d \"test=value\" http://{{TARGET_IP}}\n```\n\n> **Note:** Test different parameter types (GET, POST, JSON)",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_param",
+            "title": "Parameter Mining",
+            "description": "Discover web parameters",
+            "command": "arjun -u http://{{TARGET_IP}}"
+          }
+        ],
+        "status": "NOT_STARTED",
+        "tags": [
+          "web",
+          "params"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": false
+      },
+      "measured": {
+        "width": 242,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "web_vuln",
+      "position": {
+        "x": 956,
+        "y": 296
+      },
+      "data": {
+        "expanded": false,
+        "name": "Web Vulnerabilities",
+        "description": "# Web Vulnerability Assessment\n\n## Automated Scanning\n```bash\n# Basic Nikto scan\nnikto -h {{TARGET_IP}}\n\n# Nuclei scanning\nnuclei -u http://{{TARGET_IP}}\n```\n\n### Common Vulnerabilities:\n- SQL Injection\n- XSS\n- CSRF\n- File Inclusion\n\n> **Warning:** Verify findings manually to reduce false positives",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_nikto",
+            "title": "Vulnerability Scan",
+            "description": "Scan for web vulnerabilities",
+            "command": "nikto -h {{TARGET_IP}}"
+          }
+        ],
+        "status": "NOT_STARTED",
+        "tags": [
+          "web",
+          "vulnerabilities"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": false
+      },
+      "measured": {
+        "width": 232,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "auth_bypass",
+      "position": {
+        "x": 945,
+        "y": 444
+      },
+      "data": {
+        "expanded": false,
+        "name": "Authentication Bypass",
+        "description": "# Authentication Testing\n\n## Brute Force Attacks\n```bash\n# Basic HTTP auth brute force\nhydra -L users.txt -P pass.txt {{TARGET_IP}} http-get /admin\n\n# Form-based auth\nhydra -l admin -P rockyou.txt {{TARGET_IP}} http-post-form\n```\n\n### Authentication Weaknesses:\n1. Default credentials\n2. Weak password policy\n3. No brute force protection\n4. Password reset flaws\n\n> **Note:** Test rate limiting and account lockout policies",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_hydra",
+            "title": "Password Bruteforce",
+            "description": "Bruteforce login",
+            "command": "hydra -l admin -P wordlist.txt {{TARGET_IP}} http-post-form"
+          }
+        ],
+        "status": "NOT_STARTED",
+        "tags": [
+          "web",
+          "auth"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": false
+      },
+      "measured": {
+        "width": 254,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "smb_enum",
+      "position": {
+        "x": 670.5,
+        "y": 592
+      },
+      "data": {
+        "expanded": false,
+        "name": "SMB Enumeration",
+        "description": "# SMB Service Enumeration\n\n## Share Discovery\n```bash\n# List shares\nsmbmap -H {{TARGET_IP}}\n\n# Detailed enumeration\nnet-exec smb {{TARGET_IP}} --shares\n```\n\n### Version Detection:\n```bash\n# SMB version scanning\nnmap -p445 --script smb-protocols {{TARGET_IP}}\n```\n\n> **Security Note:** Test for null sessions and anonymous access",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_smbmap",
+            "title": "SMB Mapping",
+            "description": "Map SMB shares",
+            "command": "smbmap -H {{TARGET_IP}}"
+          },
+          {
+            "id": "cmd_nxc",
+            "title": "NetExec SMB",
+            "description": "Enumerate SMB with NetExec",
+            "command": "nxc smb {{TARGET_IP}}"
+          }
+        ],
+        "status": "NOT_STARTED",
+        "tags": [
+          "smb"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": true
+      },
+      "measured": {
+        "width": 222,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "smb_relay",
+      "position": {
+        "x": 961,
+        "y": 592
+      },
+      "data": {
+        "expanded": false,
+        "name": "SMB Relay Attack",
+        "description": "# SMB Relay Attack Configuration\n\n## Setup Process\n```bash\n# Basic relay setup\nntlmrelayx.py -tf targets.txt -smb2support\n\n# With specific options\nntlmrelayx.py -tf targets.txt -smb2support -i\n```\n\n### Prerequisites:\n1. SMB signing disabled\n2. Valid NTLM authentication\n3. Network position\n\n> **Warning:** Ensure proper authorization before testing",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_relay",
+            "title": "Setup Relay",
+            "description": "Configure SMB relay",
+            "command": "ntlmrelayx.py -tf targets.txt -smb2support"
+          }
+        ],
+        "status": "NOT_STARTED",
+        "tags": [
+          "smb",
+          "relay"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": false
+      },
+      "measured": {
+        "width": 222,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "ldap_enum",
+      "position": {
+        "x": 668,
+        "y": 740
+      },
+      "data": {
+        "expanded": false,
+        "name": "LDAP Enumeration",
+        "description": "# LDAP Service Enumeration\n\n## Basic Queries\n```bash\n# Anonymous bind\nldapsearch -x -H ldap://{{TARGET_IP}} -b \"dc=example,dc=com\"\n\n# Authenticated search\nldapsearch -x -H ldap://{{TARGET_IP}} -D \"user@domain\" -w password -b \"dc=example,dc=com\"\n\n# LDeep enumeration\nldeep ldap -u \"user@domain\" -p \"password\" -d \"domain.local\" -s {{TARGET_IP}}\n```\n\n### Common Search Filters:\n```bash\n# Find users\nldapsearch -x -H ldap://{{TARGET_IP}} \"(objectClass=user)\"\n\n# Find groups\nldapsearch -x -H ldap://{{TARGET_IP}} \"(objectClass=group)\"\n```\n\n> **Note:** Document all discovered naming conventions",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_ldapsearch",
+            "title": "LDAP Search",
+            "description": "Query LDAP",
+            "command": "ldapsearch -x -H ldap://{{TARGET_IP}}"
+          },
+          {
+            "id": "cmd_ldeep",
+            "title": "LDeep Enum",
+            "description": "Advanced LDAP enumeration",
+            "command": "ldeep ldap -u \"user@domain\" -p \"password\" -d \"domain.local\" -s {{TARGET_IP}}"
+          }
+        ],
+        "status": "NOT_STARTED",
+        "tags": [
+          "ldap"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": true
+      },
+      "measured": {
+        "width": 227,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
+    },
+    {
+      "id": "adcs_enum",
+      "position": {
+        "x": 965.5,
+        "y": 740
+      },
+      "data": {
+        "expanded": false,
+        "name": "PKI Enumeration",
+        "description": "# Active Directory Certificate Services Enumeration\n\n## Initial Discovery\n```bash\n# Certipy enumeration\ncertipy find -u user@domain -p password -dc-ip {{TARGET_IP}}\n\n# Certutil enumeration\ncertutil -dump -config \"DC.domain.local\\CA_NAME\"\n```\n\n### ESC Attack Vectors:\n\n#### ESC1 - User Template Misconfiguration\n```bash\n# Request certificate with alternate UPN\ncertipy req -u user@domain -p password -ca 'CA_NAME' -template 'Vulnerable_Template' -upn 'admin@domain'\n```\n\n#### ESC2 - Agent Template Misconfiguration\n```bash\n# Request certificate for machine account\ncertipy req -u user@domain -p password -ca 'CA_NAME' -template 'Vulnerable_Template' -machine\n```\n\n#### ESC3 - Enrollment Agent Template\n```bash\n# Request enrollment agent cert\ncertipy req -u user@domain -p password -ca 'CA_NAME' -template 'Enrollment_Agent'\n```\n\n#### ESC4 - Vulnerable ACL\n```bash\n# Check template permissions\ncertipy find -u user@domain -p password -vulnerable -dc-ip {{TARGET_IP}}\n```\n\n> **Warning:** Verify authorization before testing ESC attacks",
+        "findings": [],
+        "commands": [
+          {
+            "id": "cmd_certipy",
+            "title": "ADCS Enumeration",
+            "description": "Enumerate ADCS",
+            "command": "certipy find -u user@domain -p password -dc-ip {{TARGET_IP}}"
+          }
+        ],
+        "status": "NOT_STARTED",
+        "tags": [
+          "adcs",
+          "windows"
+        ],
+        "properties": {
+          "showPosition": false,
+          "showId": false
+        },
+        "expandable": true
+      },
+      "measured": {
+        "width": 213,
+        "height": 98
+      },
+      "selected": false,
+      "type": "custom",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible",
+        "pointerEvents": "all"
+      },
+      "sourcePosition": "right",
+      "targetPosition": "left"
     }
   ],
   "edges": [
     {
-      "id": "02383b5a-ca35-451d-968d-867c22af3fd9->06beb974-2311-4d22-8112-80f852e2bf78",
-      "source": "02383b5a-ca35-451d-968d-867c22af3fd9",
-      "target": "06beb974-2311-4d22-8112-80f852e2bf78",
-      "type": "default",
+      "id": "root->passive",
+      "source": "root",
+      "target": "passive",
       "style": {
-        "opacity": 1
-      }
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "root->network_discovery",
+      "source": "root",
+      "target": "network_discovery",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "web_enum->web_content",
+      "source": "web_enum",
+      "target": "web_content",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "web_enum->web_vuln",
+      "source": "web_enum",
+      "target": "web_vuln",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "web_enum->auth_bypass",
+      "source": "web_enum",
+      "target": "auth_bypass",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "web_content->fuzzing_path",
+      "source": "web_content",
+      "target": "fuzzing_path",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "web_content->vhosts",
+      "source": "web_content",
+      "target": "vhosts",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "web_content->params",
+      "source": "web_content",
+      "target": "params",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "smb_enum->smb_relay",
+      "source": "smb_enum",
+      "target": "smb_relay",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "network_discovery->web_enum",
+      "source": "network_discovery",
+      "target": "web_enum",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "network_discovery->smb_enum",
+      "source": "network_discovery",
+      "target": "smb_enum",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "network_discovery->ldap_enum",
+      "source": "network_discovery",
+      "target": "ldap_enum",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
+    },
+    {
+      "id": "ldap_enum->adcs_enum",
+      "source": "ldap_enum",
+      "target": "adcs_enum",
+      "style": {
+        "opacity": 1,
+        "visibility": "visible"
+      },
+      "type": "default"
     }
   ]
 }
