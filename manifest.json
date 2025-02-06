@@ -40,7 +40,7 @@
             "author": "PenFlow"
         },
         {
-        "id":"standard-owasp-asvs",    
+        "id":"standard-asvs",    
         "path": "standard-asvs",
         "name": "Official OWASP ASVS Template",
         "description": "OWASP Application Security Verification Standard (ASVS)",
